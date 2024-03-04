@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define FILENAME "employee_data.dat"
+
+struct Employee {
+    int id;
+    char name[50];
+    float salary;
+};
+
+void addEmployee() {
+    FILE *fp;
+    struct Employee emp;
+
+    fp = fopen(FILENAME, "ab");
+    if (fp == NULL) {
+        printf("Error in opening file\n");
+        return;
+    }
+
+    printf("Enter employee ID, name, and salary: ");
+    scanf("%d %s %f", &emp.id, emp.name, &emp.salary);
+    fwrite(&emp, sizeof(struct Employee), 1, fp);
+
+    fclose(fp);
+}
+
+void displayAllEmployees() {
+    FILE *fp;
+    struct Employee emp;
+
+    fp = fopen(FILENAME, "rb");
+    if (fp == NULL) {
+        printf("Error in opening file\n");
+        return;
+    }
+
+    printf("\nEmployee Records\n");
+    printf("ID\tName\tSalary\n");
+    while (fread(&emp, sizeof(struct Employee), 1, fp) == 1) {
+        printf("%d\t%s\t%.2f\n", emp.id, emp.name, emp.salary);
+    }
+
+    fclose(fp);
+}
+
+int main() {
+    int choice;
+
+    while (1) {
+        printf("\nEmployee Database\n");
+        printf("1. Add Employee\n");
+        printf("2. Display All Employees\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addEmployee();
+                break;
+            case 2:
+                displayAllEmployees();
+                break;
+            case 3:
+                exit(0);
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+
+    return 0;
+}
